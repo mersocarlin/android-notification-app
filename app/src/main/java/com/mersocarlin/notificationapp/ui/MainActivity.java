@@ -2,10 +2,9 @@ package com.mersocarlin.notificationapp.ui;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentManager;
-import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -13,7 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.FrameLayout;
+import android.view.View;
 
 import com.mersocarlin.notificationapp.R;
 import com.mersocarlin.notificationapp.ui.fragment.HomeFragment;
@@ -23,7 +22,14 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         HomeFragment.OnFragmentInteractionListener {
 
-    private FrameLayout mainFrame;
+    private final String HOME_FRAGMENT_TAG = "homeFragment";
+    private final String ITEM_FRAGMET_TAG = "itemFragment";
+    private final String SIDE_MENU_IMPORT_FRAGMENT_TAG = "sideMenuImport";
+    private final String SIDE_MENU_GALLERY_FRAGMENT_TAG = "sideMenuGallery";
+    private final String SIDE_MENU_SLIDESHOW_FRAGMENT_TAG = "sideMenSlideShow";
+    private final String SIDE_MENU_TOOLS_FRAGMENT_TAG = "sideMenuTools";
+    private final String SIDE_MENU_SHARE_FRAGMENT_TAG = "sideMenuShare";
+    private final String SIDE_MENU_SEND_FRAGMENT_TAG = "sideMenuSend";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,11 +59,12 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        this.mainFrame = (FrameLayout) findViewById(R.id.mainFrame);
+        HomeFragment homeFragment = HomeFragment.newInstance("home", 50);
 
         getSupportFragmentManager()
                 .beginTransaction()
-                .add(R.id.mainFrame, HomeFragment.newInstance("test1", "test2"), "homeFragment")
+                .add(R.id.mainFrame, homeFragment, HOME_FRAGMENT_TAG)
+                .addToBackStack(null)
                 .commit();
     }
 
@@ -70,17 +77,14 @@ public class MainActivity extends AppCompatActivity
             return;
         }
 
-        String currentFragment = this.getCurrentFragmentName();
+        int fragmentCount = getSupportFragmentManager().getBackStackEntryCount();
 
-        switch (currentFragment) {
-            default:
-            case "homeFragment":
-                super.onBackPressed();
-                break;
-            case "homeFragment1":
-                break;
-            case "itemFragment":
-                break;
+        if (fragmentCount > 1) {
+            getSupportFragmentManager().popBackStack();
+        }
+        else {
+            finish();
+            //super.onBackPressed();
         }
     }
 
@@ -109,26 +113,34 @@ public class MainActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camara) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        int fragmentCount = getSupportFragmentManager().getBackStackEntryCount();
 
-        } else if (id == R.id.nav_slideshow) {
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.mainFrame, HomeFragment.newInstance("fromSideMenu", "test2"), "homeFragment1")
-                    .addToBackStack(null)
-                    .commit();
+        while (fragmentCount > 1) {
+            getSupportFragmentManager().popBackStack();
+            fragmentCount--;
+        }
 
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        switch (id) {
+            case R.id.nav_camara:
+                this.addFragment(HomeFragment.newInstance(SIDE_MENU_IMPORT_FRAGMENT_TAG, 20), SIDE_MENU_IMPORT_FRAGMENT_TAG);
+                break;
+            case R.id.nav_gallery:
+                this.addFragment(HomeFragment.newInstance(SIDE_MENU_GALLERY_FRAGMENT_TAG, 30), SIDE_MENU_GALLERY_FRAGMENT_TAG);
+                break;
+            case R.id.nav_slideshow:
+                this.addFragment(HomeFragment.newInstance(SIDE_MENU_SLIDESHOW_FRAGMENT_TAG, 40), SIDE_MENU_SLIDESHOW_FRAGMENT_TAG);
+                break;
+            case R.id.nav_manage:
+                this.addFragment(HomeFragment.newInstance(SIDE_MENU_TOOLS_FRAGMENT_TAG, 50), SIDE_MENU_TOOLS_FRAGMENT_TAG);
+                break;
+            case R.id.nav_share:
+                this.addFragment(HomeFragment.newInstance(SIDE_MENU_SHARE_FRAGMENT_TAG, 60), SIDE_MENU_SHARE_FRAGMENT_TAG);
+                break;
+            case R.id.nav_send:
+                this.addFragment(HomeFragment.newInstance(SIDE_MENU_SEND_FRAGMENT_TAG, 70), SIDE_MENU_SEND_FRAGMENT_TAG);
+                break;
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -140,30 +152,16 @@ public class MainActivity extends AppCompatActivity
     public void onFragmentInteraction(String id) {
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.mainFrame, ItemFragment.newInstance("other param1", "other param2"), "itemFragment")
-                .addToBackStack(null)
+                .replace(R.id.mainFrame, ItemFragment.newInstance("other param1", "other param2"), ITEM_FRAGMET_TAG)
+                .addToBackStack(ITEM_FRAGMET_TAG)
                 .commit();
     }
 
-    private String getCurrentFragmentName() {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-
-        if (fragmentManager.findFragmentByTag("homeFragment") != null) {
-            return "homeFragment";
-        }
-
-        if (fragmentManager.findFragmentByTag("homeFragment1") != null) {
-            return "homeFragment1";
-        }
-
-        if (fragmentManager.findFragmentByTag("itemFragment") != null) {
-            return "itemFragment";
-        }
-
-        return "";
-
-//        Fragment currentFragment = getSupportFragmentManager()
-//                .findFragmentByTag(fragmentTag);
-//        return currentFragment;
+    private void addFragment(Fragment fragment, String fragmentTag) {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.mainFrame, fragment, fragmentTag)
+                .addToBackStack(null)
+                .commit();
     }
 }

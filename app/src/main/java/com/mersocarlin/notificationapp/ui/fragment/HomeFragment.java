@@ -10,38 +10,34 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
-import android.widget.TextView;
 
 import com.mersocarlin.notificationapp.R;
 import com.mersocarlin.notificationapp.ui.fragment.dummy.DummyContent;
 
+import java.util.List;
+
 public class HomeFragment extends Fragment implements AbsListView.OnItemClickListener {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String ARG_ITEM_PREFIX = "itemPrefix";
+    private static final String ARG_TOTAL_ITEMS = "totalItems";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private String itemPrefix;
+    private int totalItems;
 
     private OnFragmentInteractionListener mListener;
 
     private AbsListView mListView;
 
-    /**
-     * The Adapter which will be used to populate the ListView/GridView with
-     * Views.
-     */
     private ListAdapter mAdapter;
 
-    public static HomeFragment newInstance(String param1, String param2) {
+    private List<DummyContent.DummyItem> items;
+
+    public static HomeFragment newInstance(String itemPrefix, int totalItems) {
         HomeFragment fragment = new HomeFragment();
 
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString(ARG_ITEM_PREFIX, itemPrefix);
+        args.putInt(ARG_TOTAL_ITEMS, totalItems);
 
         fragment.setArguments(args);
 
@@ -55,13 +51,15 @@ public class HomeFragment extends Fragment implements AbsListView.OnItemClickLis
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            this.itemPrefix = getArguments().getString(ARG_ITEM_PREFIX);
+            this.totalItems = getArguments().getInt(ARG_TOTAL_ITEMS);
         }
+
+        this.items = DummyContent.createItems(this.itemPrefix, this.totalItems);
 
         // TODO: Change Adapter to display your content
         mAdapter = new ArrayAdapter<DummyContent.DummyItem>(getActivity(),
-                android.R.layout.simple_list_item_1, android.R.id.text1, DummyContent.ITEMS);
+                android.R.layout.simple_list_item_1, android.R.id.text1, items);
     }
 
     @Override
@@ -102,34 +100,9 @@ public class HomeFragment extends Fragment implements AbsListView.OnItemClickLis
             return;
         }
 
-        // Notify the active callbacks interface (the activity, if the
-        // fragment is attached to one) that an item has been selected.
-        mListener.onFragmentInteraction(DummyContent.ITEMS.get(position).id);
+        mListener.onFragmentInteraction(this.items.get(position).id);
     }
 
-    /**
-     * The default content for this Fragment has a TextView that is shown when
-     * the list is empty. If you would like to change the text, call this method
-     * to supply the text it should use.
-     */
-    public void setEmptyText(CharSequence emptyText) {
-        View emptyView = mListView.getEmptyView();
-
-        if (emptyView instanceof TextView) {
-            ((TextView) emptyView).setText(emptyText);
-        }
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(String id);
     }
