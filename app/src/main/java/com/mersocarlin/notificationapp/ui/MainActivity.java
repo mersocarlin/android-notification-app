@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity
     private final String ITEM_FRAGMET_TAG = "itemFragment";
     private final String SIDE_MENU_IMPORT_FRAGMENT_TAG = "sideMenuImport";
     private final String SIDE_MENU_GALLERY_FRAGMENT_TAG = "sideMenuGallery";
-    private final String SIDE_MENU_SLIDESHOW_FRAGMENT_TAG = "sideMenSlideShow";
+    private final String SIDE_MENU_SLIDESHOW_FRAGMENT_TAG = "sideMenuSlideShow";
     private final String SIDE_MENU_TOOLS_FRAGMENT_TAG = "sideMenuTools";
     private final String SIDE_MENU_SHARE_FRAGMENT_TAG = "sideMenuShare";
     private final String SIDE_MENU_SEND_FRAGMENT_TAG = "sideMenuSend";
@@ -59,11 +59,9 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        HomeFragment homeFragment = HomeFragment.newInstance("home", 50);
-
         getSupportFragmentManager()
                 .beginTransaction()
-                .add(R.id.mainFrame, homeFragment, HOME_FRAGMENT_TAG)
+                .add(R.id.mainFrame, HomeFragment.newInstance("home", 50), HOME_FRAGMENT_TAG)
                 .addToBackStack(null)
                 .commit();
     }
@@ -150,11 +148,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onFragmentInteraction(String id) {
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.mainFrame, ItemFragment.newInstance("other param1", "other param2"), ITEM_FRAGMET_TAG)
-                .addToBackStack(ITEM_FRAGMET_TAG)
-                .commit();
+        this.addFragment(ItemFragment.newInstance("Item " + id, "other param2"), ITEM_FRAGMET_TAG);
     }
 
     private void addFragment(Fragment fragment, String fragmentTag) {

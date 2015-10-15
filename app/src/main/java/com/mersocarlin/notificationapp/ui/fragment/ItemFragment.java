@@ -88,6 +88,12 @@ public class ItemFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        getActivity().setTitle(this.mParam1);
+        super.onResume();
+    }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
         inflater.inflate(R.menu.item_menu, menu);

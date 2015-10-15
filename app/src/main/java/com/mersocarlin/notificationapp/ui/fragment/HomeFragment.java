@@ -95,6 +95,12 @@ public class HomeFragment extends Fragment implements AbsListView.OnItemClickLis
     }
 
     @Override
+    public void onResume() {
+        getActivity().setTitle(this.itemPrefix);
+        super.onResume();
+    }
+
+    @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if (mListener == null) {
             return;
