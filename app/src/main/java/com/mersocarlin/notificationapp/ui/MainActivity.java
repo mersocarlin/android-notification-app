@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity
 
     private final String HOME_FRAGMENT_TAG = "homeFragment";
     private final String ITEM_FRAGMET_TAG = "itemFragment";
+
     private final String SIDE_MENU_IMPORT_FRAGMENT_TAG = "sideMenuImport";
     private final String SIDE_MENU_GALLERY_FRAGMENT_TAG = "sideMenuGallery";
     private final String SIDE_MENU_SLIDESHOW_FRAGMENT_TAG = "sideMenuSlideShow";
@@ -59,11 +60,7 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        getSupportFragmentManager()
-                .beginTransaction()
-                .add(R.id.mainFrame, HomeFragment.newInstance("home", 50), HOME_FRAGMENT_TAG)
-                .addToBackStack(null)
-                .commit();
+        this.addFragment(HomeFragment.newInstance("home", 50), HOME_FRAGMENT_TAG);
     }
 
     @Override
@@ -120,26 +117,37 @@ public class MainActivity extends AppCompatActivity
             fragmentCount--;
         }
 
+        Fragment fragment = null;
+        String fragmentTag = null;
+
         switch (id) {
             case R.id.nav_camara:
-                this.addFragment(HomeFragment.newInstance(SIDE_MENU_IMPORT_FRAGMENT_TAG, 20), SIDE_MENU_IMPORT_FRAGMENT_TAG);
+                fragment = HomeFragment.newInstance(SIDE_MENU_IMPORT_FRAGMENT_TAG, 20);
+                fragmentTag = SIDE_MENU_IMPORT_FRAGMENT_TAG;
                 break;
             case R.id.nav_gallery:
-                this.addFragment(HomeFragment.newInstance(SIDE_MENU_GALLERY_FRAGMENT_TAG, 30), SIDE_MENU_GALLERY_FRAGMENT_TAG);
+                fragment = HomeFragment.newInstance(SIDE_MENU_GALLERY_FRAGMENT_TAG, 30);
+                fragmentTag = SIDE_MENU_GALLERY_FRAGMENT_TAG;
                 break;
             case R.id.nav_slideshow:
-                this.addFragment(HomeFragment.newInstance(SIDE_MENU_SLIDESHOW_FRAGMENT_TAG, 40), SIDE_MENU_SLIDESHOW_FRAGMENT_TAG);
+                fragment = HomeFragment.newInstance(SIDE_MENU_SLIDESHOW_FRAGMENT_TAG, 40);
+                fragmentTag = SIDE_MENU_SLIDESHOW_FRAGMENT_TAG;
                 break;
             case R.id.nav_manage:
-                this.addFragment(HomeFragment.newInstance(SIDE_MENU_TOOLS_FRAGMENT_TAG, 50), SIDE_MENU_TOOLS_FRAGMENT_TAG);
+                fragment = HomeFragment.newInstance(SIDE_MENU_TOOLS_FRAGMENT_TAG, 50);
+                fragmentTag = SIDE_MENU_TOOLS_FRAGMENT_TAG;
                 break;
             case R.id.nav_share:
-                this.addFragment(HomeFragment.newInstance(SIDE_MENU_SHARE_FRAGMENT_TAG, 60), SIDE_MENU_SHARE_FRAGMENT_TAG);
+                fragment = HomeFragment.newInstance(SIDE_MENU_SHARE_FRAGMENT_TAG, 60);
+                fragmentTag = SIDE_MENU_SHARE_FRAGMENT_TAG;
                 break;
             case R.id.nav_send:
-                this.addFragment(HomeFragment.newInstance(SIDE_MENU_SEND_FRAGMENT_TAG, 70), SIDE_MENU_SEND_FRAGMENT_TAG);
+                fragment = HomeFragment.newInstance(SIDE_MENU_SEND_FRAGMENT_TAG, 70);
+                fragmentTag = SIDE_MENU_SEND_FRAGMENT_TAG;
                 break;
         }
+
+        this.addFragment(fragment, fragmentTag);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
