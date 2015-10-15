@@ -77,6 +77,8 @@ public class MainActivity extends AppCompatActivity
             case "homeFragment":
                 super.onBackPressed();
                 break;
+            case "homeFragment1":
+                break;
             case "itemFragment":
                 break;
         }
@@ -115,6 +117,11 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.mainFrame, HomeFragment.newInstance("fromSideMenu", "test2"), "homeFragment1")
+                    .addToBackStack(null)
+                    .commit();
 
         } else if (id == R.id.nav_manage) {
 
@@ -143,6 +150,10 @@ public class MainActivity extends AppCompatActivity
 
         if (fragmentManager.findFragmentByTag("homeFragment") != null) {
             return "homeFragment";
+        }
+
+        if (fragmentManager.findFragmentByTag("homeFragment1") != null) {
+            return "homeFragment1";
         }
 
         if (fragmentManager.findFragmentByTag("itemFragment") != null) {
