@@ -32,6 +32,9 @@ public class MainActivity extends AppCompatActivity
     private final String SIDE_MENU_SHARE_FRAGMENT_TAG = "sideMenuShare";
     private final String SIDE_MENU_SEND_FRAGMENT_TAG = "sideMenuSend";
 
+    private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,13 +54,16 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        this.drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+                this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+
+        drawerLayout.setDrawerListener(toggle);
+
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        this.navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         this.addFragment(HomeFragment.newInstance("home", 50), HOME_FRAGMENT_TAG);
@@ -149,14 +155,15 @@ public class MainActivity extends AppCompatActivity
 
         this.addFragment(fragment, fragmentTag);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+        this.drawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
 
     @Override
     public void onFragmentInteraction(String id) {
         this.addFragment(ItemFragment.newInstance("Item " + id, "other param2"), ITEM_FRAGMET_TAG);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     private void addFragment(Fragment fragment, String fragmentTag) {
