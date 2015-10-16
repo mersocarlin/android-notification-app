@@ -32,8 +32,10 @@ public class MainActivity extends AppCompatActivity
     private final String SIDE_MENU_SHARE_FRAGMENT_TAG = "sideMenuShare";
     private final String SIDE_MENU_SEND_FRAGMENT_TAG = "sideMenuSend";
 
+    private Toolbar toolbar;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
+    private ActionBarDrawerToggle actionBarDrawerToggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,9 +43,9 @@ public class MainActivity extends AppCompatActivity
 
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        this.toolbar = (Toolbar) findViewById(R.id.toolbar);
 
-        setSupportActionBar(toolbar);
+        setSupportActionBar(this.toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -56,12 +58,12 @@ public class MainActivity extends AppCompatActivity
 
         this.drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+        this.actionBarDrawerToggle = new ActionBarDrawerToggle(
                 this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
 
-        drawerLayout.setDrawerListener(toggle);
+        this.drawerLayout.setDrawerListener(this.actionBarDrawerToggle);
 
-        toggle.syncState();
+        this.actionBarDrawerToggle.syncState();
 
         this.navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -162,8 +164,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onFragmentInteraction(String id) {
         this.addFragment(ItemFragment.newInstance("Item " + id, "other param2"), ITEM_FRAGMET_TAG);
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     private void addFragment(Fragment fragment, String fragmentTag) {
